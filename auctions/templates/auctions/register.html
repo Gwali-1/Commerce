@@ -2,35 +2,39 @@
 
 {% block body %}
 
-    <h2>Register</h2>
+    <h2 class="text-center">Register</h2>
 
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
-
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input type="text" class="form-control" autofocus name="firstname"placeholde="First Name" ]>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" autofocus name="lastname"placeholde="Last Name" ]>
-        </div>
-        <div class="form-group">
-            <input class="form-control"  type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <div class="container">
+        <form action="{% url 'register' %}" method="post" class="w-75 m-auto">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" class="form-control" autofocus name="firstname" placeholder="First Name" >
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" autofocus name="lastname" placeholder="Last Name" >
+            </div>
+            <div class="form-group">
+                <input class="form-control"  type="text" name="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="email" name="email" placeholder="Email Address">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+            </div>
+            <div class="row">
+                <input class="btn btn-dark mx-auto px-4" type="submit" value="Register">
+            </div>
+           
+        </form>
+    </div>
+   
+    <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Log In here.</a></p> 
 
 {% endblock %}

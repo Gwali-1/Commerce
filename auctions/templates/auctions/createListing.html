@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+<div class="container mt-5 ">
+    <form action="" class="w-75 m-auto">
+        {%csrf_token%}
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" placeholder="Name">
+        </div>
+        <div class="input-group mb-4">
+            <span class="input-group-text">$</span>
+            <input class="form-control" type="number" name="price" placeholder="Starting Price">
+        </div>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon3">Image url for listing</span>
+            <input type="text" class="form-control" name="image_url" id="basic-url" aria-describedby="basic-addon3">   
+        </div>
+    </form>
+</div>
+{% endblock body %}
