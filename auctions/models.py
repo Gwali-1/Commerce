@@ -4,14 +4,14 @@ from datetime import datetime
 
 
 class User(AbstractUser):
-    first = models.CharField(max_length=64)
-    last = models.CharField(max_length=64)
+    pass
 
 
 
 
 class Listing(models.Model):
-    name = models.CharField(max_length=64)
+    title = models.CharField(max_length=64)
+    description = models.CharField(max_length=200)
     price = models.IntegerField()
     active = models.BooleanField(default=True)
     bid_number = models.IntegerField(default=0)
@@ -20,7 +20,7 @@ class Listing(models.Model):
     created = models.DateField(default= datetime.now().strftime('%Y-%m-%d'))
 
     def __str__(self):
-        return f'{self.name} {self.price} {self.active} {self.bid_number}'
+        return f'{self.title} {self.price} {self.active} {self.bid_number}'
    
 
 class Comment(models.Model):
@@ -42,6 +42,8 @@ class Category(models.Model):
 
 class Bids(models.Model):
     bid = models.IntegerField()
+    state = models.CharField(default="unresolved",max_length=64)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="bid_info")
     listing = models.ForeignKey(Listing,on_delete=models.CASCADE,related_name="Bids")
 
     def __str__(self):

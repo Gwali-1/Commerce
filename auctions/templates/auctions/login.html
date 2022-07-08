@@ -3,11 +3,6 @@
 {% block body %}
 
     <h2 class="text-center">Login</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
     <div class="container">
         <form action="{% url 'login' %}" method="post" class="w-75 m-auto">
             {% csrf_token %}
@@ -22,6 +17,10 @@
             </div>
             
         </form>
+
+        {% if message %}
+        <div class="text-danger text-center pt-3">{{ message }}</div>
+        {% endif %}
     </div>
   
     <p class="text-center mt-3">Don't have an account? <a href="{% url 'register' %}">Register here.</a></p>
