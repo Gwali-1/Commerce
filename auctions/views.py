@@ -11,7 +11,11 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    active_listings = Listing.objects.filter(active=True)
+    print(active_listings)
+    return render(request, "auctions/index.html",{
+        "active_listings":active_listings
+    })
 
 
 def login_view(request):
@@ -75,7 +79,7 @@ def create(request):
         title = request.POST["title"]
         category = request.POST["category"]
         description = request.POST["description"]
-        price = request.POST["price"]
+        price = float(request.POST["price"])
         image_link = request.POST["image_url"]
 
         print(request.POST)
@@ -90,13 +94,12 @@ def create(request):
         #category and add listing
         try:
             user = User.objects.get(pk=request.user.id)
-            listing=Listing.objects.create(title=title,description=description,price=price,ListingImageUrl=image_link,user = user)
+            listing=Listing.objects.create(title=title.title(),description=description.capitalize(),price=price,ListingImageUrl=image_link,user=user)
             listing.save()
             # if check:
             #     check.listing
-            category=Category(name=category,listing=listing)
+            category=Category(name=category.upper(),listing=listing)
             category.save()
-         
             print("listing added")
             return HttpResponseRedirect(reverse("index"))
         except Exception as e:
@@ -104,7 +107,6 @@ def create(request):
             return render(request,"auctions/createListing.html",{
                 "message":"Couldnt create listing"
             })
-
 
     return render(request,"auctions/createListing.html")
 

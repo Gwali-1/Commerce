@@ -1,7 +1,47 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    {% if active_listings %}
+    recieved query set
+    {% endif %}
+    <div class="container now overflow-hidden">
 
-    TODO
+        {% for listing in active_listings %}
+            {% if forloop.first %}<div class="row justify-content-between border mb-3 ">{% endif %}
+            <div class="col-md-4 ">
+                <div class="border border-primary text-center">
+                    <img src="{{listing.ListingImageUrl}}" class="img-fluid" height="300" width="300" alt= "image">
+                    <div  class="border bg-light text-danger">
+                    <{{listing.title}}</p>
+                    46$
+                    <p class="text-break text-danger">{{listing.description}}</p>
+                    </div>    
+                </div>
+                
+            </div>
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row justify-content-between">{% endif %}
+            {% if forloop.last %}</div>{% endif %}
+        {% endfor %}
+        {% comment %} <div class="row  justify-content-between">
+            <div class="col-md-4 ">
+                <div class="border border-primary ">
+                    <img src="https://sunnygeeks.com/wp-content/uploads/2021/02/portal_gun_rickmorty2.jpg" class="img-fluid" height="300" width="300" alt= "image">
+                    <div  class="border bg-light text-danger">
+                    <p>Portal Gun</p>
+                    46$
+                    <p class="text-break text-primary">Pvvsvdvcmhsdmbvcsdbbvjbdf,bvbvdbvbdbvdkshcds,klhwclwcwhkhckwhekcwnc.kwnkcnw.encknwk</p>
+                    </div>
+                   
+                </div>
+            </div>
+
+            <div class="col-md-4 ">
+                <p class="p-3 border bg-light"> Custom column</p>
+            </div>
+
+            <div class="col-md-4">
+                <p class="p-3 border bg-light"> Custom column</p>
+            </div>
+        </div> {% endcomment %}
+    </div>
 {% endblock %}

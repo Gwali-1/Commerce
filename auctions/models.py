@@ -12,11 +12,11 @@ class User(AbstractUser):
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=200)
-    price = models.IntegerField()
+    price =models.FloatField()
     active = models.BooleanField(default=True)
     bid_number = models.IntegerField(default=0)
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
-    ListingImageUrl = models.CharField(max_length=100,blank=True)
+    ListingImageUrl = models.CharField(max_length=200,blank=True)
     created = models.DateField(default= datetime.now().strftime('%Y-%m-%d'))
 
     def __str__(self):
