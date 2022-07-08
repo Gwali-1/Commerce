@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -17,7 +17,7 @@ class Listing(models.Model):
     bid_number = models.IntegerField(default=0)
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
     ListingImageUrl = models.CharField(max_length=200,blank=True)
-    created = models.DateField(default= datetime.now().strftime('%Y-%m-%d'))
+    created = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'{self.title} {self.price} {self.active} {self.bid_number}'

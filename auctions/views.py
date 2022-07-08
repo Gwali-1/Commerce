@@ -11,7 +11,7 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 
 
 def index(request):
-    active_listings = Listing.objects.filter(active=True)
+    active_listings = Listing.objects.filter(active=True).order_by('created')
     print(active_listings)
     return render(request, "auctions/index.html",{
         "active_listings":active_listings
