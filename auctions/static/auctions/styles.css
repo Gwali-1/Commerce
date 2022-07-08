@@ -1,9 +1,34 @@
 body {
     padding: 10px;
-    
 }
 
 
-.now{
-    background-color: red;
+nav{
+    font-family: monospace;
+}
+
+
+.description{
+    font-weight:300;
+    font-family:monospace;
+    font-size:15px ;
+}
+
+.price{
+    font-size: 30px;
+    font-family: serif;
+}
+
+.title{
+    font-weight:600;
+}
+
+.listing_item{
+    color: inherit;
+    display: block;
+   
+
+}
+.listing_item:hover{
+    text-decoration: none;
 }
