@@ -11,5 +11,6 @@ urlpatterns = [
     path("create/",views.create,name="create"),
     path("categories/",views.categories,name="categories"),
     path("listing/<int:id>",views.ListingInfo,name="ListingInfo"),
-    path("newbid/<int:id>",views.NewBid,name="NewBid")
+    path("newbid/<int:id>",views.NewBid,name="NewBid"),
+    path("addcomment/<int:id>",views.AddComment,name="comment")
 ]

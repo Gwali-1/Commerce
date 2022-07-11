@@ -125,9 +125,11 @@ def create(request):
 def ListingInfo(request,id):
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
+    comments = Comment.objects.filter(listing=listing)
     return render(request,"auctions/listing.html",{
         "listing":listing,
-        "category":category_name
+        "category":category_name,
+        "comments":comments,
     })
 
 
@@ -174,17 +176,21 @@ def AddComment(request,id):
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
         comment = request.POST["comment"]
-    
-    if not comment:
-        messages.error(request,"no comment provided")
-        return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
-    try:
-        new_comment = Comment.objects.create(comments=comment.trim(),listing=listing)
-        new_comment.save()
-    except Exception as e:
-        print(e)
-        messages.info(request,"INFO: Could Not Add Your Comment At The Moment, Try Again Later")
-        return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+        #if not comment was sent
+        if not comment:
+            messages.error(request,"no comment provided")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+        #try to save comment    
+        try:
+            new_comment = Comment.objects.create(comments=comment.strip(),listing=listing)
+            new_comment.save()
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+        except Exception as e:
+            print(e)
+            messages.info(request,"INFO: Could Not Add Your Comment At The Moment, Try Again Later")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
 
 
