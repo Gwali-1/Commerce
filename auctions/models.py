@@ -41,7 +41,7 @@ class Category(models.Model):
 
 
 class Bids(models.Model):
-    bid = models.IntegerField()
+    bid = models.FloatField()
     state = models.CharField(default="unresolved",max_length=64)
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="bid_info")
     listing = models.ForeignKey(Listing,on_delete=models.CASCADE,related_name="Bids")

@@ -6,6 +6,16 @@
         
     {% endif %}
 
+    <!-- flash_messages -->
+    {% for message in messages %}
+        <div class=" alert {{ message.tags }} alert-dismissible text-center" role="alert">
+        <button type="button" class="close " data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message | safe }}
+        </div>
+    {% endfor %}    
+
     <div class="container overflow-hidden">
 
         <div class="row justify-content-between">
@@ -20,7 +30,7 @@
                     <p class="listing-title ">{{listing.title}}</p> 
                     <p class="text-break description fw-light"><i>{{listing.description}}</i></p>
                     <div class="text-success">
-                        <span class="listing-price">Bids:{{listing.bid_number}}</span> <span class="mx-4 listing-price" >Current Price:{{listing.price}}</span>
+                        <span class="listing-price">Bids:{{listing.bid_number}}</span> <span class="mx-4 listing-price" >Current Price:{{listing.price}}0</span>
                     </div>
 
                      <!-- Details -->
@@ -52,13 +62,15 @@
                     <!-- bid form -->
                     {% if user.is_authenticated %}
                         {% if user == listing.user %}
-                            <form action="" cl>
+                            <form action="{% url 'NewBid' listing.id %}" method="post">
+                                {% csrf_token %}
                                 <div class="input-group mb-4">
                                     <span class="input-group-text">$</span>
-                                    <input class="form-control" type="number" name="price" placeholder="New Bid">
+                                    <input class="form-control" type="number" name="bid" placeholder="New Bid">
                                     <input class="btn btn-outline-dark" type="submit" value="Place Bid">
                                 </div>
                             </form>
+                            <p>{{bid_message}}</p>
                         {% endif %}
                     {% endif %}
         

@@ -3,13 +3,14 @@ from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 from .models import User,Listing,Comment,Category,Bids,Watchlist
 
 
+#index page
 def index(request):
     active_listings = Listing.objects.filter(active=True).order_by('-created')
     print(active_listings)
@@ -18,6 +19,10 @@ def index(request):
     })
 
 
+
+
+
+#login
 def login_view(request):
     if request.method == "POST":
 
@@ -38,11 +43,15 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
+#logout
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
+
+
+#register
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -73,6 +82,7 @@ def register(request):
 
 
 
+#create listing
 @login_required()
 def create(request):
     if request.method == "POST":
@@ -111,6 +121,7 @@ def create(request):
     return render(request,"auctions/createListing.html")
 
 
+
 def ListingInfo(request,id):
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
@@ -121,9 +132,65 @@ def ListingInfo(request,id):
 
 
 
+#Bid
+@login_required()
+def NewBid(request,id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=id)
+        new_bid = request.POST["bid"]
+
+        if not new_bid:
+            messages.error(request,"Please enter a bid amount")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+
+        if float(new_bid) > listing.price:
+            try:
+                user = User.objects.get(pk=request.user.id)
+                new_bid_on_listing = Bids.objects.create(bid=new_bid,user=user,listing=listing)
+                new_bid_on_listing.save()
+                print("bid added")
+                listing.bid_number += 1
+                listing.price = new_bid
+                listing.save()
+                print("listing updated")
+                messages.success(request,"SUCCESS: Your Bid Has Been Added")
+                return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+            except Exception as e:
+                print(e)
+                messages.info(request,"INFO: Could Not Add Your Bid At The Moment, Try Again Later")
+                return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+        messages.error(request,"Error:Bid Must Be Greater Than Current Price To Be Added")
+        return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+
+
+
+
+
+#comment
+def AddComment(request,id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=id)
+        comment = request.POST["comment"]
+    
+    if not comment:
+        messages.error(request,"no comment provided")
+        return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+    try:
+        new_comment = Comment.objects.create(comments=comment.trim(),listing=listing)
+        new_comment.save()
+    except Exception as e:
+        print(e)
+        messages.info(request,"INFO: Could Not Add Your Comment At The Moment, Try Again Later")
+        return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+
+
+
 #todo comment
 
-# todo bid
 
 # watchlist
 
