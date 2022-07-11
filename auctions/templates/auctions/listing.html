@@ -53,10 +53,15 @@
 
                 <div class="mt-3">
 
+                    <!-- Watchlist form -->
                     {% if user == listing.user %}
-                        <div class="mb-4 ">
-                            <input type="submit" class=" btn border bg-dark  text-success " value="Add to Watchlist">
-                        </div>
+                        <form action="{% url 'add_to_watchlist' listing.id %}"  method="post">
+                            {%csrf_token%}
+                            <div class="mb-4 ">
+                                <input type="submit" class=" btn border bg-dark  text-success " value="Add to Watchlist">
+                            </div>
+                        </form>
+                      
                     {% endif %}
                     
                     <!-- bid form -->

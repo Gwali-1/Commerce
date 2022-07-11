@@ -1,4 +1,5 @@
 from email import message
+from tabnanny import check
 from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -197,10 +198,31 @@ def add_comment(request,id):
 
 
 
-
-
-
 # watchlist
+
+def add_to_watchlist(request,id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=id)
+        if (check := Watchlist.objects.filter(Listing=listing,user=request.user)):
+            messages.info(request,"Item Is Already In Your Watchlist")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+        try:
+            new_watchlist = Watchlist.objects.create(Listing=listing,user=request.user)
+            new_watchlist.save()
+            print("added_watchlist")
+            messages.success(request,"Added To Watchlist")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+        except Exception as e:
+            messages.info(request,"Could Not Add To Watchlist, Try again Later")
+
+
+
+
+def close_auction(request):
+    pass
+
+
+
 
 #close aunction
 
