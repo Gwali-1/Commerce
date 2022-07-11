@@ -18,9 +18,19 @@ nav{
     font-size: 30px;
     font-family: serif;
 }
+.listing-price{
+    font-size: 20px;
+    font-family:monospace;
+}
 
 .title{
     font-weight:600;
+}
+
+.listing-title{
+    font-weight:600;
+    font-size: 40px;
+    margin-bottom: 2px;
 }
 
 .listing_item{

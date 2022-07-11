@@ -8,7 +8,7 @@
 
         {% for listing in active_listings %}
             {% if forloop.first %}<div class="row justify-content-between border mb-3 ">{% endif %}
-            <a href="" class="listing_item"> 
+            <a href="{% url 'ListingInfo'  listing.id%}" class="listing_item"> 
                 <div class="col-md-4  ">
                     <div class="border border-primary lead title">
                         <div class="text-center">

@@ -11,7 +11,7 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 
 
 def index(request):
-    active_listings = Listing.objects.filter(active=True).order_by('created')
+    active_listings = Listing.objects.filter(active=True).order_by('-created')
     print(active_listings)
     return render(request, "auctions/index.html",{
         "active_listings":active_listings
@@ -111,13 +111,23 @@ def create(request):
     return render(request,"auctions/createListing.html")
 
 
+def ListingInfo(request,id):
+    listing = Listing.objects.get(pk=id)
+    category_name  = Category.objects.get(listing=listing)
+    return render(request,"auctions/listing.html",{
+        "listing":listing,
+        "category":category_name
+    })
 
 
 
+#todo comment
 
+# todo bid
 
+# watchlist
 
-
+#close aunction
 
 def categories(request):
     return render(request,"auctions/categories.html")
