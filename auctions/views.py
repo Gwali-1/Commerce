@@ -122,7 +122,8 @@ def create(request):
 
 
 
-def ListingInfo(request,id):
+def listing_info(request,id):
+    ''' gets a listing objects and other information associated to it'''
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
     comments = Comment.objects.filter(listing=listing)
@@ -136,12 +137,13 @@ def ListingInfo(request,id):
 
 #Bid
 @login_required()
-def NewBid(request,id):
+def new_bid(request,id):
+    ''' places a bid on the listing and makes it the current price if its larger than all other bids
+        also updates the bid number on listing
+    '''
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
-        new_bid = request.POST["bid"]
-
-        if not new_bid:
+        if not (new_bid := request.POST["bid"]):
             messages.error(request,"Please enter a bid amount")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
@@ -172,13 +174,14 @@ def NewBid(request,id):
 
 
 #comment
-def AddComment(request,id):
+def add_comment(request,id):
+    ''' adds a comment to the listing page'''
+
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
-        comment = request.POST["comment"]
 
         #if not comment was sent
-        if not comment:
+        if not (comment := request.POST["comment"]):
             messages.error(request,"no comment provided")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
@@ -195,7 +198,6 @@ def AddComment(request,id):
 
 
 
-#todo comment
 
 
 # watchlist
