@@ -44,7 +44,9 @@
                 <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
                     <ul class="navbar-nav  mt-4">
                         <li class="nav-item">
-                            <a class="nav-link text-success" href="{% url 'index' %}">Active Listings</a>
+                            <a class="nav-link text-success" href="{% url 'index' %}">
+                                Active Listings
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light"  href="{% url 'categories' %}">Categories</a>
@@ -54,7 +56,9 @@
                             <a class="nav-link text-light" href="{% url 'create' %}">Create Listing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light"  href="{% url 'logout' %}">Watchlist</a>
+                            <a class="nav-link text-light"  href="{% url 'logout' %}">
+                                Watchlist<span class="badge bg-info">4</span>
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-danger"  href="{% url 'logout' %}">Log Out</a>
