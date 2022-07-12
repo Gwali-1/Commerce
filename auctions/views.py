@@ -127,7 +127,17 @@ def listing_info(request,id):
     ''' gets a listing objects and other information associated to it'''
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
-    comments = Comment.objects.filter(listing=listing)
+    comments = Comment.objects.filter(listing=listing).order_by("comments")
+
+    if listing.bid_number > 0:
+        winning_bid = Bids.objects.get(bid=listing.price)
+        return render(request,"auctions/listing.html",{
+        "listing":listing,
+        "category":category_name,
+        "comments":comments,
+        "bid":winning_bid
+    })
+    
     return render(request,"auctions/listing.html",{
         "listing":listing,
         "category":category_name,
@@ -175,6 +185,7 @@ def new_bid(request,id):
 
 
 #comment
+@login_required()
 def add_comment(request,id):
     ''' adds a comment to the listing page'''
 
@@ -199,7 +210,7 @@ def add_comment(request,id):
 
 
 # watchlist
-
+@login_required()
 def add_to_watchlist(request,id):
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
@@ -214,17 +225,33 @@ def add_to_watchlist(request,id):
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
             messages.info(request,"Could Not Add To Watchlist, Try again Later")
-
-
-
-
-def close_auction(request):
-    pass
-
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
 
 
 #close aunction
+def close_auction(request,id):
+    if request.method == "POST":
+        listing = Listing.objects.get(pk=id)
+        if listing.user != request.user:
+            messages.warning(request,"Creditial Forgery Detected")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+        try:
+            if not (winning_bid := Bids.objects.filter(bid=listing.price,user=request.user,listing=listing)):
+                return HttpResponse("not not ok")
+            listing.active = False
+            listing.save()
+            winning_bid[0].state = "won"
+            winning_bid[0].save()
+            messages.success(request,"Auction Closed")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+        except Exception as e:
+            messages.info(request,"Could Not Add To Watchlist, Try again Later")
+            return HttpResponse("not ok")
+        
+
+
+
 
 def categories(request):
     return render(request,"auctions/categories.html")

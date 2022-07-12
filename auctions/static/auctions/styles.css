@@ -42,3 +42,8 @@ nav{
 .listing_item:hover{
     text-decoration: none;
 }
+
+.comments{
+    font-family: monospace;
+    margin-bottom: 2px;
+}

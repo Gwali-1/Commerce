@@ -6,6 +6,9 @@
         
     {% endif %}
 
+
+   
+    
     <!-- flash_messages -->
     {% for message in messages %}
         <div class=" alert {{ message.tags }} alert-dismissible text-center" role="alert">
@@ -30,7 +33,14 @@
                     <p class="listing-title ">{{listing.title}}</p> 
                     <p class="text-break description fw-light"><i>{{listing.description}}</i></p>
                     <div class="text-success">
-                        <span class="listing-price">Bids:{{listing.bid_number}}</span> <span class="mx-4 listing-price" >Current Price:{{listing.price}}0</span>
+                        <button type="button" class="btn btn-dark  position-relative">
+                            Bids
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{listing.bid_number}}
+                            </span>
+                         </button>
+                        
+                        <span class="mx-4 listing-price" >Current Price:{{listing.price}}0</span>
                     </div>
 
                      <!-- Details -->
@@ -83,17 +93,29 @@
                     <!-- close auction button -->
                     {% if user.is_authenticated %}
                         {% if user == listing.user %}
+                        <form action="{% url 'close_auction' listing.id %}" method="post">
+                            {%csrf_token%}
                             <div>
-                                <input class="btn border btn-outline-danger " value="Close Auction">
+                                <input type="submit" class="btn border btn-outline-danger " value="Close Auction">
                             </div>
+                        </form>
+                           
                         {% endif %}
                     {% endif %}
                 
 
                 </div>
 
+                <!-- jenja code to display winner of bid -->
+                {% if bid %}
+                    {% if bid.user == user and bid.listing.active == True %}
+                        <p> {{bid.user.first_name}} won </p> 
+                    {% endif %}
+                {% endif %}
                 
             </div>
+          
+
         </div>
 
 
@@ -121,7 +143,7 @@
                 <div id="comment" class="accordion-collapse collapse show " aria-labelledby="headingOne" data-bs-parent="#Comments">
                   <div class="accordion-body">
                     {% for comment in comments %}
-                    <p>{{comment}}</p>
+                     <p class="comments mx-3  mb-3  border-bottom  px-4"><i class="bi bi-person-lines-fill text-success"></i>  {{comment}}</p>
                     {% endfor %}
                   </div>
            
