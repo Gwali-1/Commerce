@@ -158,16 +158,20 @@ def listing_info(request,id):
     })
 
 
+    #if there are bids on listing
     if listing.bid_number > 0:
-        winning_bid = Bids.objects.get(bid=listing.price)
+        bids = Bids.objects.filter(listing=listing)
+        bid_owners = [x.user for x in bids]    
+        winning_bid = Bids.objects.get(bid=listing.price,listing=listing)
         return render(request,"auctions/listing.html",{
         "listing":listing,
         "category":category_name,
         "comments":comments,
         "bid":winning_bid,
-        "watchlist":watchlist
+        "watchlist":watchlist,
+        "loosers":bid_owners,
     })
-    
+    #if listing has 0 bids
     return render(request,"auctions/listing.html",{
         "listing":listing,
         "category":category_name,

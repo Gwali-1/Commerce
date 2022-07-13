@@ -124,10 +124,16 @@
                 <!-- jenja code to display winner of bid -->
                 {% if bid %}
                     {% if bid.user == user and bid.listing.active == False %}
-                        <p> {{bid.user.first_name}} won </p> 
+                        <p class ="lead price mt-2 "> WON </p> 
+                    {% else %}
+                        {% if user in loosers %}
+                            <p class ="lead price mt-2 "> LOSS </p> 
+                        {% endif %}
                     {% endif %}
-                {% endif %}
                 
+                    
+                {% endif %}
+                {{lost}}
             </div>
           
 
