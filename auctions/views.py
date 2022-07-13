@@ -90,26 +90,26 @@ def register(request):
 @login_required()
 def create(request):
     watchlist = Watchlist.objects.filter(user=request.user)
+    categories_available =  Category.objects.all()
+    print(categories_available)
     if request.method == "POST":
         title = request.POST["title"]
         category = request.POST["category"]
         description = request.POST["description"]
-        price = float(request.POST["price"])
+        price = request.POST["price"]
         image_link = request.POST["image_url"]
 
         print(request.POST)
         if not title or not price or not category or not description:
-            return render(request, "auctions/createListing.html", {
-                "message":"mMissing fields, please provide all information"
-            })
+            messages.error(request,"Error: Missing Fields")
+            return render(request, "auctions/createListing.html")
 
-        print(request.POST)
 
         #TODO  create listing, create category , add listing to user , add listing to category but first check if category exixt then add to existing if not create new 
         #category and add listing
         try:
             user = User.objects.get(pk=request.user.id)
-            listing=Listing.objects.create(title=title.title(),description=description.capitalize(),price=price,ListingImageUrl=image_link,user=user)
+            listing=Listing.objects.create(title=title.title(),description=description.capitalize(),price=float(price),ListingImageUrl=image_link,user=user)
             listing.save()
             # if check:
             #     check.listing
@@ -124,7 +124,8 @@ def create(request):
             })
 
     return render(request,"auctions/createListing.html",{
-        "watchlist":watchlist
+        "watchlist":watchlist,
+        "available_categories":categories_available,
     })
 
 
@@ -171,6 +172,9 @@ def new_bid(request,id):
             messages.error(request,"Please enter a valid amount")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
+        if listing.active == False:
+            messages.error(request,"Cannot Bid on Closed auction")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
         if float(new_bid) > listing.price:
             try:
@@ -250,9 +254,16 @@ def close_auction(request,id):
         if listing.user != request.user:
             messages.warning(request,"Creditial Forgery Detected")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+    
         try:
+            #if there are no bids on item
             if not (winning_bid := Bids.objects.filter(bid=listing.price,user=request.user,listing=listing)):
-                return HttpResponse("not not ok")
+                listing.active = False
+                listing.save()
+                messages.success(request,"Auction Closed")
+                return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
             listing.active = False
             listing.save()
             winning_bid[0].state = "won"
@@ -265,11 +276,35 @@ def close_auction(request,id):
         
 
 
+
+#watchlist
 @login_required()
 def watchlist(request):
     watchlist = Watchlist.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        listing_id = request.POST["listing"]
+        listing = Listing.objects.get(pk=listing_id)
+        if not (chek := Watchlist.objects.filter(user=request.user,Listing=listing)):
+            pass
+        
+        try:
+            Watchlist.objects.filter(user=request.user,Listing=listing).delete()
+            messages.success(request,"Item removed from watchlist")
+            return render(request,"auctions/watchlist.html",{
+            "watchlist":watchlist
+            })
+        except Exception as e:
+            print(e)
+            messages.info(request,"Item could not be removed")
+            return render(request,"auctions/watchlist.html",{
+            "watchlist":watchlist
+            })
+            
+ 
     return render(request,"auctions/watchlist.html",{
         "watchlist":watchlist
+        
     })
 
 

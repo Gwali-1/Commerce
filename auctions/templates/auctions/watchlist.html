@@ -23,13 +23,14 @@
                         {% if watchlisting.Listing.active == True %}
                                 <span class="mx-4 text-success lead"> Open</span> 
                             {% else %}
-                                <span class="mx-4">Status: Closed</span> 
+                                <span class="mx-4 text-danger lead">Closed</span> 
                             {% endif %}
                         <p class="price text-success">34.0</p>
                     
                     </div>
                     <form action="" method="post">
                         {%csrf_token%}
+                        <input hidden value="{{watchlisting.Listing.id}}" name=listing>
                         <button type="submit" class="btn btn-outline-danger">Remove</button>
                     </form>
                     

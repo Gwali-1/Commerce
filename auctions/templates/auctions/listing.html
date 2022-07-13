@@ -85,7 +85,7 @@
                     
                     <!-- bid form -->
                     {% if user.is_authenticated %}
-                        {% if user == listing.user %}
+                        {% if user == listing.user and listing.active == False %}
                             <form action="{% url 'NewBid' listing.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group mb-4">
@@ -100,14 +100,17 @@
 
                     <!-- close auction button -->
                     {% if user.is_authenticated %}
-                        {% if user == listing.user %}
+                        {% if user == listing.user and listing.active == True %}
                         <form action="{% url 'close_auction' listing.id %}" method="post">
                             {%csrf_token%}
                             <div>
                                 <input type="submit" class="btn border btn-outline-danger " value="Close Auction">
                             </div>
                         </form>
-                           
+                        {% else %}
+                           <button type="button" class="btn btn-dark  text-danger position-relative">
+                            Closed
+                         </button>
                         {% endif %}
                     {% endif %}
                 
