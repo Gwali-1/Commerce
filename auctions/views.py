@@ -139,13 +139,16 @@ def create(request):
 
 def listing_info(request,id):
     ''' gets a listing objects and other information associated to it'''
-    listing = Listing.objects.get(pk=id)
+    listing = Listing.objects.filter(pk=id)
+    if not listing:
+        return HttpResponseRedirect(reverse("index"))
+
+    listing = listing[0]
     category_name  = Category.objects.get(listing=listing)
     comments = Comment.objects.filter(listing=listing).order_by("comments")
 
     if request.user.is_authenticated:
          watchlist = Watchlist.objects.filter(user=request.user)
-
     #if not logged in
     if not request.user.is_authenticated:
         return render(request,"auctions/listing.html",{

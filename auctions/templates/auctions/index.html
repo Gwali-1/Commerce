@@ -12,10 +12,10 @@
     <div class="container  overflow-hidden">
 
         {% for listing in active_listings %}
-            {% if forloop.first %}<div class="row justify-content-between border mb-3 ">{% endif %}
+            {% if forloop.first %}<div class="row justify-content-between border-bottom border-dark mb-3 pb-2 ">{% endif %}
             <a href="{% url 'ListingInfo'  listing.id%}" class="listing_item"> 
                 <div class="col-md-4  ">
-                    <div class="border border-primary lead title">
+                    <div class="border  lead title">
                         <div class="text-center">
                             <img src="{{listing.ListingImageUrl}}" height="200" width="270" alt= "image">
                         </div>
@@ -29,7 +29,7 @@
             </a>
                 
             </div>
-            {% if forloop.counter|divisibleby:3 %}</div><div class="row ">{% endif %}
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row   border-bottom border-dark mb-3 pb-2">{% endif %}
             {% if forloop.last %}</div>{% endif %}
         {% endfor %}
     </div>
