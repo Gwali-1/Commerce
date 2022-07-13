@@ -14,9 +14,12 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 #index page
 def index(request):
     active_listings = Listing.objects.filter(active=True).order_by('-created')
+    watchlist = Watchlist.objects.filter(user=request.user)
+    print(watchlist)
     print(active_listings)
     return render(request, "auctions/index.html",{
-        "active_listings":active_listings
+        "active_listings":active_listings,
+        "watchlist":watchlist,
     })
 
 
@@ -86,6 +89,7 @@ def register(request):
 #create listing
 @login_required()
 def create(request):
+    watchlist = Watchlist.objects.filter(user=request.user)
     if request.method == "POST":
         title = request.POST["title"]
         category = request.POST["category"]
@@ -119,7 +123,9 @@ def create(request):
                 "message":"Couldnt create listing"
             })
 
-    return render(request,"auctions/createListing.html")
+    return render(request,"auctions/createListing.html",{
+        "watchlist":watchlist
+    })
 
 
 
@@ -128,6 +134,7 @@ def listing_info(request,id):
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
     comments = Comment.objects.filter(listing=listing).order_by("comments")
+    watchlist = Watchlist.objects.filter(user=request.user)
 
     if listing.bid_number > 0:
         winning_bid = Bids.objects.get(bid=listing.price)
@@ -135,13 +142,15 @@ def listing_info(request,id):
         "listing":listing,
         "category":category_name,
         "comments":comments,
-        "bid":winning_bid
+        "bid":winning_bid,
+         "watchlist":watchlist
     })
     
     return render(request,"auctions/listing.html",{
         "listing":listing,
         "category":category_name,
         "comments":comments,
+        "watchlist":watchlist
     })
 
 
@@ -156,6 +165,10 @@ def new_bid(request,id):
         listing = Listing.objects.get(pk=id)
         if not (new_bid := request.POST["bid"]):
             messages.error(request,"Please enter a bid amount")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
+
+        if not new_bid.isnumeric():
+            messages.error(request,"Please enter a valid amount")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
 
@@ -230,6 +243,7 @@ def add_to_watchlist(request,id):
 
 
 #close aunction
+@login_required()
 def close_auction(request,id):
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
@@ -249,6 +263,14 @@ def close_auction(request,id):
             messages.info(request,"Could Not Add To Watchlist, Try again Later")
             return HttpResponse("not ok")
         
+
+
+@login_required()
+def watchlist(request):
+    watchlist = Watchlist.objects.filter(user=request.user)
+    return render(request,"auctions/watchlist.html",{
+        "watchlist":watchlist
+    })
 
 
 

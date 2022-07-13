@@ -1,5 +1,14 @@
 {% extends 'auctions/layout.html' %}
 
+
+    {% block watchlist %}
+        {{watchlist.count}}
+    {% endblock watchlist %}
+
+    {% if watchlist %}
+        list
+    {% endif %}
+
 {% block body %}
     {% if listing %}
         {{listing.title}}
@@ -137,7 +146,7 @@
             <div class="accordion-item">
                 <h2 class="" id="headingOne">
                   <button class="btn btn-l border" type="button" data-bs-toggle="collapse" data-bs-target="#comment" aria-expanded="true" aria-controls="collapseOne">
-                   Comments<i class="bi text-success mx-4  bi-arrow-down-square"></i>
+                   Comments
                 </h2>
                 <div id="comment" class="accordion-collapse collapse show " aria-labelledby="headingOne" data-bs-parent="#Comments">
                   <div class="accordion-body">

@@ -1,5 +1,9 @@
 {% extends 'auctions/layout.html' %}
 
+{% block watchlist %}
+    {{watchlist.count}}
+{% endblock watchlist %}
+
 {% block body %}
 <div class="container mt-5 ">
     <form method="post" class="w-75 m-auto">

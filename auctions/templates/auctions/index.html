@@ -1,5 +1,10 @@
 {% extends "auctions/layout.html" %}
 
+
+{% block watchlist %}
+    {{watchlist.count}}
+{% endblock watchlist %}
+
 {% block body %}
     {% if active_listings %}
     recieved query set

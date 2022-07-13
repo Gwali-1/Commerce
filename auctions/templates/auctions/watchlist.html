@@ -1,0 +1,46 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    {% if watchlist %}
+        recieved
+    {% endif %}
+    <div class="container">
+
+        {% for watchlisting in watchlist %}
+            <div class="row border align-items-center p-2">
+               
+                    <div class="col-md-4 border p-3">
+                        <a href="{% url 'ListingInfo' watchlisting.Listing.id %}" class="listing_item d-block watchlist-link border "> 
+                            <div class="border text-center">
+                                <img src="{{watchlisting.Listing.ListingImageUrl}}"  height="200" width="200" alt= "image">
+                            </div>
+                        </a>
+                    </div>
+               
+                <div class="col-md-4 ">
+                    <div class="lead title">
+                        {{watchlisting.Listing.title}}
+                        {% if watchlisting.Listing.active == True %}
+                                <span class="mx-4 text-success lead"> Open</span> 
+                            {% else %}
+                                <span class="mx-4">Status: Closed</span> 
+                            {% endif %}
+                        <p class="price text-success">34.0</p>
+                    
+                    </div>
+                    <form action="" method="post">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-outline-danger">Remove</button>
+                    </form>
+                    
+                </div>
+            </div>
+        {% endfor %}
+
+        
+
+
+
+    </div>
+
+{% endblock body %}

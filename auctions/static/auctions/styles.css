@@ -47,3 +47,7 @@ nav{
     font-family: monospace;
     margin-bottom: 2px;
 }
+
+.watchlist-link:hover{
+    border-color: green;
+}
