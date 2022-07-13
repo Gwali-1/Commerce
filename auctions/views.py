@@ -14,12 +14,18 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 #index page
 def index(request):
     active_listings = Listing.objects.filter(active=True).order_by('-created')
-    watchlist = Watchlist.objects.filter(user=request.user)
-    print(watchlist)
+
+    #if user is logged in , add watchlist object
+    if request.user.is_authenticated:
+         watchlist = Watchlist.objects.filter(user=request.user)
+         return render(request, "auctions/index.html",{
+        "active_listings":active_listings,
+        "watchlist":watchlist,
+    })
+
     print(active_listings)
     return render(request, "auctions/index.html",{
         "active_listings":active_listings,
-        "watchlist":watchlist,
     })
 
 
@@ -130,12 +136,24 @@ def create(request):
 
 
 
+
 def listing_info(request,id):
     ''' gets a listing objects and other information associated to it'''
     listing = Listing.objects.get(pk=id)
     category_name  = Category.objects.get(listing=listing)
     comments = Comment.objects.filter(listing=listing).order_by("comments")
-    watchlist = Watchlist.objects.filter(user=request.user)
+
+    if request.user.is_authenticated:
+         watchlist = Watchlist.objects.filter(user=request.user)
+
+    #if not logged in
+    if not request.user.is_authenticated:
+        return render(request,"auctions/listing.html",{
+        "listing":listing,
+        "category":category_name,
+        "comments":comments,
+    })
+
 
     if listing.bid_number > 0:
         winning_bid = Bids.objects.get(bid=listing.price)
@@ -144,7 +162,7 @@ def listing_info(request,id):
         "category":category_name,
         "comments":comments,
         "bid":winning_bid,
-         "watchlist":watchlist
+        "watchlist":watchlist
     })
     
     return render(request,"auctions/listing.html",{
@@ -285,10 +303,17 @@ def watchlist(request):
     if request.method == "POST":
         listing_id = request.POST["listing"]
         listing = Listing.objects.get(pk=listing_id)
+
+        #if for some reason listing sent is not in users watchlist
         if not (chek := Watchlist.objects.filter(user=request.user,Listing=listing)):
-            pass
+            messages.warning(request,"Creditial Forgery Detected")
+            return render(request,"auctions/watchlist.html",{
+            "watchlist":watchlist
+        
+    })
         
         try:
+            #remove
             Watchlist.objects.filter(user=request.user,Listing=listing).delete()
             messages.success(request,"Item removed from watchlist")
             return render(request,"auctions/watchlist.html",{

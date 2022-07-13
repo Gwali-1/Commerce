@@ -73,7 +73,8 @@
                 <div class="mt-3">
 
                     <!-- Watchlist form -->
-                    {% comment %} {% if user != listing.user %} {% endcomment %}
+                    {% if user.is_authenticated %}
+                        {% comment %} {% if user != listing.user %} {% endcomment %}
                         <form action="{% url 'add_to_watchlist' listing.id %}"  method="post">
                             {%csrf_token%}
                             <div class="mb-4 ">
@@ -81,11 +82,13 @@
                             </div>
                         </form>
                       
-                    {% comment %} {% endif %} {% endcomment %}
+                     {% comment %} {% endif %} {% endcomment %}
+                    {% endif %}
+                
                     
                     <!-- bid form -->
                     {% if user.is_authenticated %}
-                        {% if user == listing.user and listing.active == False %}
+                        {% if user != listing.user and listing.active == True %}
                             <form action="{% url 'NewBid' listing.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group mb-4">
@@ -107,10 +110,11 @@
                                 <input type="submit" class="btn border btn-outline-danger " value="Close Auction">
                             </div>
                         </form>
-                        {% else %}
-                           <button type="button" class="btn btn-dark  text-danger position-relative">
-                            Closed
-                         </button>
+                        {% elif listing.active == False %}
+                            <button type="button" class="btn btn-dark  text-danger position-relative">
+                                Closed
+                            </button>
+                       
                         {% endif %}
                     {% endif %}
                 
