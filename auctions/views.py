@@ -347,10 +347,17 @@ def watchlist(request):
 def categories(request):
     """displays all available categories of listings"""
     categories = Category.objects.all().order_by("name")
-
+    #removing duplicates
     filtered = {cat.name for cat in categories}
-    print(filtered)
-
     return render(request,"auctions/categories.html",{
         "categories":filtered
+    })
+
+
+#category_filter
+def category_filter(request,name):
+    filtered_listings = Category.objects.filter(name=name)
+
+    return render(request,"auctions/filtered.html",{
+        "listings":filtered_listings
     })

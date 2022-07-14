@@ -1,0 +1,32 @@
+{% extends 'auctions/layout.html' %}
+
+
+{% block body %}
+
+    <div class="container  overflow-hidden">
+
+        {% for Listing in listings %}
+                <div class="row border align-items-center p-2">
+                            
+                        <div class="col-md-4 border p-3">
+                            <a href="{% url 'ListingInfo' Listing.listing.id %}" class="listing_item d-block watchlist-link border "> 
+                                <div class="border text-center">
+                                    <img src="{{Listing.listing.ListingImageUrl}}"  height="200" width="200" alt= "image">
+                                </div>
+                            </a>
+                        </div>
+                
+                    <div class="col-md-4 ">
+                        <div class="lead title">
+                            {{Listing.listing.title}}
+                            <p class="price text-success">{{Listing.listing.price}}0</p> 
+                            <p class="text-break description fw-light"><i>{{Listing.listing.description}}</i></p>
+                        
+                        </div> 
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+{% endblock body %}
+

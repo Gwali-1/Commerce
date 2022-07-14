@@ -4,13 +4,9 @@
 
 
 {% block body %}
-
-    {% if categories %}
-    yes
-    {% endif %}
     <div class="container text-center p-2">
             {% for category in categories %}
-                <a href="" class="category  w-25 mx-auto ">
+                <a href="{% url 'category_filter' category%}" class="category  w-25 mx-auto ">
                     <div class="border p-1 mb-3 ">
                         <p class="p-2 border mt-3 price lead"> {{category}}</p>
                     </div>

@@ -5,19 +5,7 @@
         {{watchlist.count}}
     {% endblock watchlist %}
 
-    {% if watchlist %}
-        list
-    {% endif %}
-
-{% block body %}
-    {% if listing %}
-        {{listing.title}}
-        
-    {% endif %}
-
-
-   
-    
+{% block body %}  
     <!-- flash_messages -->
     {% for message in messages %}
         <div class=" alert {{ message.tags }} alert-dismissible text-center" role="alert">
