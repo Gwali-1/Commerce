@@ -254,6 +254,7 @@ def add_comment(request,id):
 # watchlist
 @login_required()
 def add_to_watchlist(request,id):
+    """adds an item to a users watchlist"""
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
         if (check := Watchlist.objects.filter(Listing=listing,user=request.user)):
@@ -274,6 +275,7 @@ def add_to_watchlist(request,id):
 #close aunction
 @login_required()
 def close_auction(request,id):
+    """renders an auction closed and declares winner"""
     if request.method == "POST":
         listing = Listing.objects.get(pk=id)
         if listing.user != request.user:
@@ -305,6 +307,7 @@ def close_auction(request,id):
 #watchlist
 @login_required()
 def watchlist(request):
+    """handles removing of items from watchlist"""
     watchlist = Watchlist.objects.filter(user=request.user)
 
     if request.method == "POST":
@@ -340,7 +343,14 @@ def watchlist(request):
     })
 
 
-
-
+#categories
 def categories(request):
-    return render(request,"auctions/categories.html")
+    """displays all available categories of listings"""
+    categories = Category.objects.all().order_by("name")
+
+    filtered = {cat.name for cat in categories}
+    print(filtered)
+
+    return render(request,"auctions/categories.html",{
+        "categories":filtered
+    })

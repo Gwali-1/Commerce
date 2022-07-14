@@ -125,7 +125,7 @@
                 {% if bid %}
                     {% if bid.user == user and bid.listing.active == False %}
                         <p class ="lead price mt-2 "> WON </p> 
-                    {% else %}
+                    {% elif bid.listing.active == False %}
                         {% if user in loosers %}
                             <p class ="lead price mt-2 "> LOSS </p> 
                         {% endif %}

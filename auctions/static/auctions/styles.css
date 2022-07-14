@@ -43,6 +43,17 @@ nav{
     text-decoration: none;
 }
 
+.category:hover{
+    text-decoration: none;
+    color: green;
+}
+
+.category{
+    color: black;
+    display: block;
+
+    
+}
 .comments{
     font-family: monospace;
     margin-bottom: 2px;
