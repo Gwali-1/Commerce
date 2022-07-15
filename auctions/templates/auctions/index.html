@@ -6,13 +6,11 @@
 {% endblock watchlist %}
 
 {% block body %}
-    {% if active_listings %}
-    recieved query set
-    {% endif %}
+   
     <div class="container  overflow-hidden">
 
         {% for listing in active_listings %}
-            {% if forloop.first %}<div class="row justify-content-between border-bottom border-dark mb-3 pb-2 ">{% endif %}
+            {% if forloop.first %}<div class="row justify-content-between border mb-3 p-2 ">{% endif %}
             <a href="{% url 'ListingInfo'  listing.id%}" class="listing_item"> 
                 <div class="col-md-4  ">
                     <div class="border  lead title">
@@ -29,8 +27,14 @@
             </a>
                 
             </div>
-            {% if forloop.counter|divisibleby:3 %}</div><div class="row   border-bottom border-dark mb-3 pb-2">{% endif %}
+            {% if forloop.counter|divisibleby:3 %}</div><div class="row  mb-3 pb-2">{% endif %}
             {% if forloop.last %}</div>{% endif %}
+
+            {%empty%}
+            <div class="text-center ">
+                <p class="lead display-2 text-muted"> No Active Listings Currently</p>
+                <img src="https://static.vecteezy.com/system/resources/previews/006/865/495/non_2x/cucumber-character-with-sad-emotions-depressed-face-down-eyes-arms-and-legs-person-with-melancholy-expression-green-vegetable-emoticon-flat-illustration-vector.jpg" class="" height="200" width="270" alt= "image">
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

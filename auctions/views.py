@@ -13,7 +13,8 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 
 #index page
 def index(request):
-    active_listings = Listing.objects.filter(active=True).order_by('-created')
+    active_listings = Listing.objects.filter(active=True).order_by('title')
+    print(active_listings)
 
     #if user is logged in , add watchlist object
     if request.user.is_authenticated:
@@ -69,6 +70,10 @@ def register(request):
         first = request.POST["firstname"]
         last = request.POST["lastname"]
 
+        if not username or not email or not first or not last:
+            messages.error(request,"Please provide required information")
+            return render(request, "auctions/register.html")
+
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -110,15 +115,11 @@ def create(request):
             messages.error(request,"Error: Missing Fields")
             return render(request, "auctions/createListing.html")
 
-
-        #TODO  create listing, create category , add listing to user , add listing to category but first check if category exixt then add to existing if not create new 
-        #category and add listing
         try:
             user = User.objects.get(pk=request.user.id)
             listing=Listing.objects.create(title=title.title(),description=description.capitalize(),price=float(price),ListingImageUrl=image_link,user=user)
             listing.save()
-            # if check:
-            #     check.listing
+    
             category=Category(name=category.upper(),listing=listing)
             category.save()
             print("listing added")
@@ -211,11 +212,11 @@ def new_bid(request,id):
                 listing.price = new_bid
                 listing.save()
                 print("listing updated")
-                messages.success(request,"SUCCESS: Your Bid Has Been Added")
+                messages.success(request,"Your Bid Has Been Added")
                 return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
             except Exception as e:
                 print(e)
-                messages.info(request,"INFO: Could Not Add Your Bid At The Moment, Try Again Later")
+                messages.info(request,"Something Went Wrong, Try Again Later")
                 return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
         messages.error(request,"Error:Bid Must Be Greater Than Current Price To Be Added")
@@ -246,7 +247,7 @@ def add_comment(request,id):
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
             print(e)
-            messages.info(request,"INFO: Could Not Add Your Comment At The Moment, Try Again Later")
+            messages.info(request,"Something Went Wrong, Try Again Later")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
 
@@ -267,7 +268,7 @@ def add_to_watchlist(request,id):
             messages.success(request,"Added To Watchlist")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
-            messages.info(request,"Could Not Add To Watchlist, Try again Later")
+            messages.info(request,"Something Went Wrong, Try again Later")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
 
@@ -299,7 +300,7 @@ def close_auction(request,id):
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
             messages.info(request,"Could Not Add To Watchlist, Try again Later")
-            return HttpResponse("not ok")
+            return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         
 
 
@@ -357,7 +358,6 @@ def categories(request):
 #category_filter
 def category_filter(request,name):
     filtered_listings = Category.objects.filter(name=name)
-
     return render(request,"auctions/filtered.html",{
         "listings":filtered_listings
     })
