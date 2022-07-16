@@ -100,7 +100,6 @@ def register(request):
 def create(request):
     watchlist = Watchlist.objects.filter(user=request.user)
     categories_available =  Category.objects.all()
-    print(categories_available)
     if request.method == "POST":
         title = request.POST["title"]
         category = request.POST["category"]
@@ -108,7 +107,6 @@ def create(request):
         price = request.POST["price"]
         image_link = request.POST["image_url"]
 
-        print(request.POST)
         if not title or not price or not category or not description:
             messages.error(request,"Error: Missing Fields")
             return render(request, "auctions/createListing.html")
@@ -120,10 +118,9 @@ def create(request):
     
             category=Category(name=category.upper(),listing=listing)
             category.save()
-            print("listing added")
             return HttpResponseRedirect(reverse("index"))
         except Exception as e:
-            print(e)
+            messages.info(request,"Could not  create listing, Try again later")
             return render(request,"auctions/createListing.html",{
                 "message":"Couldnt create listing"
             })
@@ -205,15 +202,12 @@ def new_bid(request,id):
                 user = User.objects.get(pk=request.user.id)
                 new_bid_on_listing = Bids.objects.create(bid=new_bid,user=user,listing=listing)
                 new_bid_on_listing.save()
-                print("bid added")
                 listing.bid_number += 1
                 listing.price = new_bid
                 listing.save()
-                print("listing updated")
                 messages.success(request,"Your Bid Has Been Added")
                 return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
             except Exception as e:
-                print(e)
                 messages.info(request,"Something Went Wrong, Try Again Later")
                 return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
@@ -244,7 +238,6 @@ def add_comment(request,id):
             new_comment.save()
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
-            print(e)
             messages.info(request,"Something Went Wrong, Try Again Later")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
 
@@ -262,7 +255,6 @@ def add_to_watchlist(request,id):
         try:
             new_watchlist = Watchlist.objects.create(Listing=listing,user=request.user)
             new_watchlist.save()
-            print("added_watchlist")
             messages.success(request,"Added To Watchlist")
             return HttpResponseRedirect(reverse("ListingInfo",args=(listing.id,)))
         except Exception as e:
@@ -329,7 +321,6 @@ def watchlist(request):
             "watchlist":watchlist
             })
         except Exception as e:
-            print(e)
             messages.info(request,"Item could not be removed")
             return render(request,"auctions/watchlist.html",{
             "watchlist":watchlist
