@@ -14,7 +14,6 @@ from .models import User,Listing,Comment,Category,Bids,Watchlist
 #index page
 def index(request):
     active_listings = Listing.objects.filter(active=True).order_by('title')
-    print(active_listings)
 
     #if user is logged in , add watchlist object
     if request.user.is_authenticated:
@@ -24,7 +23,6 @@ def index(request):
         "watchlist":watchlist,
     })
 
-    print(active_listings)
     return render(request, "auctions/index.html",{
         "active_listings":active_listings,
     })
