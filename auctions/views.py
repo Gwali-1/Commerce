@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -137,7 +138,10 @@ def listing_info(request,id):
         return HttpResponseRedirect(reverse("index"))
 
     listing = listing[0]
-    category_name  = Category.objects.get(listing=listing)
+    category_name  = Category.objects.filter(listing=listing)
+    if category_name:
+        category_name = category_name[0]
+  
     comments = Comment.objects.filter(listing=listing).order_by("comments")
 
     if request.user.is_authenticated:
