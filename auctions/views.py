@@ -1,6 +1,3 @@
-from email import message
-from tabnanny import check
-from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
