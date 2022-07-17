@@ -1,7 +1,7 @@
 
 # ODD AUCTIONS(Commerce site)
 
-*odd auctions is a web application implemented using the django web framework. The site works by giving users who have registered for an account the ability to make listings of products and also bid on products listed by other users. Users who create auctions have the abilty to close them and if the item had any  bids the winner is determined based on who was leading the bid at the moment of closing. This application is built purely with django and follows a typical layered achitecture pattern. The app has several view fuctions that handle certain business logic. I will give a brief descrition of a couple*.
+*odd auctions is a web application implemented using the django web framework. The site works by giving users who have registered for an account the ability to make listings of products and also bid on products listed by other users. Users who create auctions have the abilty to close them and if the item had any  bids the winner is determined based on who was leading the bid at the moment of closing. This application is built purely with django and follows a typical layered achitecture pattern. The app has several view fuctions that handle certain business logic. I will give a brief description of a couple*.
 
 
 ## index
